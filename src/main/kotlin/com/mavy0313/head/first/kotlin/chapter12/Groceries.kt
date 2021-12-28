@@ -51,4 +51,52 @@ fun main() {
     var itemNames = ""
     groceries.forEach { itemNames += "${it.name} " }
     println("itemNames: $itemNames")
+
+    groceries.groupBy { it.category }.forEach {
+        println(it.key)
+        it.value.forEach { println("  ${it.name}") }
+    }
+
+    val ints = listOf(1, 2, 3)
+    val sumOfInts = ints.fold(0) { runningSum, item -> runningSum + item }
+    println("sum of ints:$sumOfInts")
+
+    val productOfInts = ints.fold(1) { runningProduct, item -> runningProduct * item }
+    println("productOfInts: $productOfInts")
+
+    val names = groceries.fold("") { string, item -> string + " ${item.name}" }
+    println("names: $names")
+
+    val changeFrom50 = groceries.fold(50.0) { change, item -> change - (item.unitPrice * item.quantity) }
+    println("change from 50: $changeFrom50")
+
+    val spentOnVegetables = groceries
+        .filter { it.category == "Vegetable" }
+        .sumOf {  it.unitPrice * it.quantity }
+
+    println("spent on vegetables: $spentOnVegetables")
+
+    val totalPriceLessThen5 = groceries
+        .filter { it.unitPrice * it.quantity < 5.0 }
+        .map { it.name }
+
+    println("total price less then 5: $totalPriceLessThen5")
+
+//    totalCostOfEachCategory
+    groceries
+        .groupBy { it.category }
+        .forEach {
+            println(it.key)
+//            val cost = it.value.fold(0.0) { runningSum, item -> runningSum + (item.unitPrice * item.quantity) }
+            val cost = it.value.sumOf { it.unitPrice * it.quantity }
+            println("  $cost")
+        }
+
+    groceries
+        .filterNot { it.unit == "Bottle" }
+        .groupBy { it.unit }
+        .forEach {
+            println(it.key)
+            it.value.forEach { println("  ${it.name}") }
+        }
 }
